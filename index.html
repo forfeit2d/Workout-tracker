@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beginner Fit - PureGym Boerum Hill Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b',
+            },
+            accent: {
+              500: '#3b82f6',
+              600: '#2563eb',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen pb-20 md:pb-10">
+
+  <!-- Main Navigation Top Bar -->
+  <header class="sticky top-0 z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="bg-brand-500/20 p-2 rounded-xl border border-brand-500/30">
+          <i data-lucide="dumbbell" class="w-6 h-6 text-brand-500"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight text-white">PureGym Tracker</h1>
+          <p class="text-xs text-gray-400">Boerum Hill Beginner Split (4-Day)</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="reset-data-btn" class="text-xs text-gray-400 hover:text-red-400 px-2 py-1 rounded border border-gray-800 hover:border-red-900/50 transition" title="Clear local data">
+          Reset Logs
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- View Switcher Tabs -->
+    <div class="flex bg-gray-900 p-1 rounded-xl border border-gray-800 text-sm">
+      <button id="tab-schedule" onclick="switchTab('schedule')" class="flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 bg-brand-500 text-gray-950 shadow">
+        <i data-lucide="calendar" class="w-4 h-4"></i> Schedule
+      </button>
+      <button id="tab-workout" onclick="switchTab('workout')" class="flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 text-gray-400 hover:text-white">
+        <i data-lucide="play-circle" class="w-4 h-4"></i> Today's Session
+      </button>
+      <button id="tab-history" onclick="switchTab('history')" class="flex-1 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 text-gray-400 hover:text-white">
+        <i data-lucide="line-chart" class="w-4 h-4"></i> Progress
+      </button>
+    </div>
+
+    <!-- SCHEDULE VIEW -->
+    <section id="view-schedule" class="space-y-4">
+      <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-5">
+        <h2 class="text-lg font-semibold text-white mb-1 flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-5 h-5 text-brand-500"></i>
+          Your 4-Day Beginner Program
+        </h2>
+        <p class="text-sm text-gray-400">
+          Designed specifically for machine usage at PureGym Boerum Hill. Alternate between full-body strength building and cardiovascular conditioning.
+        </p>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <!-- Day 1 Card -->
+        <div class="bg-gray-900 border border-gray-800 hover:border-brand-500/40 transition rounded-xl p-4 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-brand-500/10 text-brand-500 border border-brand-500/20">Day 1</span>
+              <span class="text-xs text-gray-400">Strength</span>
+            </div>
+            <h3 class="font-semibold text-white text-base">Full-Body Workout A</h3>
+            <p class="text-xs text-gray-400 mt-1">Focus on major machine pushes, pulls, and leg power.</p>
+            <ul class="text-xs text-gray-300 mt-3 space-y-1">
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Leg Press Machine</li>
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Seated Chest Press</li>
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Lat Pulldown Machine</li>
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Seated Shoulder Press</li>
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Abdominal Crunch Machine</li>
+            </ul>
+          </div>
+          <button onclick="startSession('day1')" class="mt-4 w-full py-2 bg-gray-800 hover:bg-brand-500 hover:text-gray-950 font-medium text-xs rounded-lg transition">Start Day 1</button>
+        </div>
+
+        <!-- Day 2 Card -->
+        <div class="bg-gray-900 border border-gray-800 hover:border-accent-500/40 transition rounded-xl p-4 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-accent-500/10 text-accent-500 border border-accent-500/20">Day 2</span>
+              <span class="text-xs text-gray-400">Cardio</span>
+            </div>
+            <h3 class="font-semibold text-white text-base">Run Session 1: Walk/Run Intervals</h3>
+            <p class="text-xs text-gray-400 mt-1">High-efficiency treadmill intervals to build aerobic stamina.</p>
+            <div class="mt-3 bg-gray-950/50 p-2.5 rounded-lg border border-gray-800 text-xs text-gray-300">
+              <p>⏱️ <strong>Structure:</strong> 5m Warmup Walk → 10x (1m Run / 1m Walk) → 5m Cooldown Walk (30 mins total).</p>
+            </div>
+          </div>
+          <button onclick="startSession('day2')" class="mt-4 w-full py-2 bg-gray-800 hover:bg-accent-500 hover:text-white font-medium text-xs rounded-lg transition">Start Running Session 1</button>
+        </div>
+
+        <!-- Day 3 Card -->
+        <div class="bg-gray-900/50 border border-gray-800/80 rounded-xl p-4 opacity-75">
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-800 text-gray-400">Day 3</span>
+            <span class="text-xs text-gray-500">Recovery</span>
+          </div>
+          <h3 class="font-semibold text-gray-300 text-base">Rest / Active Recovery</h3>
+          <p class="text-xs text-gray-400 mt-1">Light walking around Brooklyn, foam rolling, or stretching.</p>
+        </div>
+
+        <!-- Day 4 Card -->
+        <div class="bg-gray-900 border border-gray-800 hover:border-brand-500/40 transition rounded-xl p-4 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-brand-500/10 text-brand-500 border border-brand-500/20">Day 4</span>
+              <span class="text-xs text-gray-400">Strength</span>
+            </div>
+            <h3 class="font-semibold text-white text-base">Full-Body Workout B</h3>
+            <p class="text-xs text-gray-400 mt-1">Slight variation focusing on row movements and core stability.</p>
+            <ul class="text-xs text-gray-300 mt-3 space-y-1">
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Leg Press Machine</li>
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Seated Cable Row</li>
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Seated Chest Press</li>
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Seated Shoulder Press</li>
+              <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i> Abdominal Crunch Machine</li>
+            </ul>
+          </div>
+          <button onclick="startSession('day4')" class="mt-4 w-full py-2 bg-gray-800 hover:bg-brand-500 hover:text-gray-950 font-medium text-xs rounded-lg transition">Start Day 4</button>
+        </div>
+
+        <!-- Day 5 Card -->
+        <div class="bg-gray-900 border border-gray-800 hover:border-accent-500/40 transition rounded-xl p-4 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-accent-500/10 text-accent-500 border border-accent-500/20">Day 5</span>
+              <span class="text-xs text-gray-400">Cardio</span>
+            </div>
+            <h3 class="font-semibold text-white text-base">Run Session 2: Steady Endurance</h3>
+            <p class="text-xs text-gray-400 mt-1">Continuous treadmill effort to strengthen cardiac output.</p>
+            <div class="mt-3 bg-gray-950/50 p-2.5 rounded-lg border border-gray-800 text-xs text-gray-300">
+              <p>⏱️ <strong>Structure:</strong> 20–25 minutes at a comfortable conversational jog speed.</p>
+            </div>
+          </div>
+          <button onclick="startSession('day5')" class="mt-4 w-full py-2 bg-gray-800 hover:bg-accent-500 hover:text-white font-medium text-xs rounded-lg transition">Start Running Session 2</button>
+        </div>
+
+        <!-- Days 6 & 7 Card -->
+        <div class="bg-gray-900/50 border border-gray-800/80 rounded-xl p-4 opacity-75">
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-800 text-gray-400">Days 6 & 7</span>
+            <span class="text-xs text-gray-500">Recovery</span>
+          </div>
+          <h3 class="font-semibold text-gray-300 text-base">Weekend Rest Days</h3>
+          <p class="text-xs text-gray-400 mt-1">Muscle tissue rebuilds while resting. Prioritize hydration and 7–8 hours of sleep.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKOUT LOGGING VIEW -->
+    <section id="view-workout" class="hidden space-y-6">
+      <div id="active-session-header" class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex justify-between items-center">
+        <div>
+          <span id="session-badge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-brand-500/10 text-brand-500">Day 1</span>
+          <h2 id="session-title" class="text-lg font-bold text-white mt-1">Full-Body Workout A</h2>
+        </div>
+        <button onclick="finishSession()" class="bg-brand-500 text-gray-950 px-4 py-2 rounded-lg font-semibold text-xs hover:bg-brand-600 transition flex items-center gap-1.5">
+          <i data-lucide="check-circle" class="w-4 h-4"></i> Complete Workout
+        </button>
+      </div>
+
+      <!-- Container for Strength or Running Cards -->
+      <div id="workout-exercises-container" class="space-y-4">
+        <!-- Dynamically Rendered -->
+      </div>
+    </section>
+
+    <!-- PROGRESS / HISTORY VIEW -->
+    <section id="view-history" class="hidden space-y-6">
+      <!-- Chart Card -->
+      <div class="bg-gray-900 p-5 rounded-2xl border border-gray-800">
+        <h3 class="text-sm font-semibold text-gray-300 mb-4 flex items-center gap-2">
+          <i data-lucide="trending-up" class="w-4 h-4 text-brand-500"></i> Strength Progression (Leg Press Max Weight)
+        </h3>
+        <div class="h-56 relative">
+          <canvas id="progressChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Workout History Logs -->
+      <div class="bg-gray-900 p-5 rounded-2xl border border-gray-800 space-y-4">
+        <h3 class="text-sm font-semibold text-gray-300 flex items-center gap-2">
+          <i data-lucide="history" class="w-4 h-4 text-accent-500"></i> Saved Workout History
+        </h3>
+        <div id="history-list" class="space-y-3">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- EXERCISE INSTRUCTION MODAL -->
+  <div id="exercise-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-gray-900 border border-gray-800 w-full max-w-lg rounded-2xl p-6 relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-1 rounded-lg bg-gray-800">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="p-3 bg-brand-500/10 rounded-xl text-brand-500">
+          <i data-lucide="info" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h3 id="modal-title" class="text-lg font-bold text-white">Exercise Name</h3>
+          <span id="modal-muscles" class="text-xs text-brand-500 font-medium">Target Muscles</span>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-sm text-gray-300">
+        <div>
+          <h4 class="font-semibold text-white mb-1 text-xs uppercase tracking-wider text-gray-400">Step-by-Step Instructions</h4>
+          <ol id="modal-steps" class="list-decimal list-inside space-y-1.5 text-gray-300 text-xs leading-relaxed">
+            <!-- Steps -->
+          </ol>
+        </div>
+
+        <div class="bg-brand-500/5 p-3 rounded-xl border border-brand-500/20">
+          <h4 class="font-semibold text-brand-400 text-xs mb-1">PureGym Boerum Hill Form Tip</h4>
+          <p id="modal-tip" class="text-xs text-gray-300 leading-relaxed"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT & APPLICATION LOGIC -->
+  <script>
+    // Database of Exercises with detailed PureGym Boerum Hill instructions
+    const exerciseDetails = {
+      'leg_press': {
+        name: 'Leg Press Machine',
+        muscles: 'Quads, Glutes, Hamstrings',
+        steps: [
+          'Sit on the machine and place your feet flat on the sled platform about shoulder-width apart.',
+          'Release the safety handles on the side.',
+          'Inhale and slowly lower the sled until your knees form a 90-degree angle.',
+          'Press firmly through your heels to return to starting position without locking your knees out completely.'
+        ],
+        tip: 'PureGym Boerum Hill selectorized leg presses use a weight stack pin. Start light (e.g., 50-70 lbs) to test knee joint comfort.'
+      },
+      'chest_press': {
+        name: 'Seated Chest Press',
+        muscles: 'Chest, Front Shoulders, Triceps',
+        steps: [
+          'Adjust the seat height so the handles align directly with middle chest height.',
+          'Grasp handles with knuckles facing forward and wrists straight.',
+          'Press handles forward smoothly until arms are almost fully extended.',
+          'Slowly control the handle backwards until elbows are just behind your torso.'
+        ],
+        tip: 'Keep your shoulders pulled back and down into the seat pad during the entire pressing motion.'
+      },
+      'lat_pulldown': {
+        name: 'Lat Pulldown Machine',
+        muscles: 'Lats (Upper Back), Biceps',
+        steps: [
+          'Adjust the thigh pads so your legs are snugly wedged under.',
+          'Reach up and grip the wide bar with hands wider than shoulder-width.',
+          'Lean back slightly (about 10 degrees) and pull the bar straight down to upper chest level.',
+          'Squeeze your shoulder blades together at the bottom, then return slowly to top position.'
+        ],
+        tip: 'Focus on pulling down through your elbows rather than pulling with your hands to isolate the upper back.'
+      },
+      'cable_row': {
+        name: 'Seated Cable Row',
+        muscles: 'Mid Back, Rear Shoulders, Rhomboids',
+        steps: [
+          'Sit with feet firmly planted on the foot rests with knees slightly bent.',
+          'Grip the neutral V-bar attachment with arms extended.',
+          'Keep your back straight, pull the handles toward your belly button, bringing elbows back.',
+          'Pause for 1 second, then extend arms smoothly forward.'
+        ],
+        tip: 'Avoid rocking back and forth wildly. Keep your core tight and maintain an upright spine.'
+      },
+      'shoulder_press': {
+        name: 'Seated Shoulder Press',
+        muscles: 'Shoulders, Upper Triceps',
+        steps: [
+          'Adjust seat so handles start around ear level.',
+          'Sit firmly with your lower back pressed against the backrest.',
+          'Push handles vertically upwards overhead until arms are nearly straight.',
+          'Lower weight smoothly back down to ear level.'
+        ],
+        tip: 'If overhead pressing irritates your shoulders, try using a slightly narrower grip if available on the machine handles.'
+      },
+      'ab_crunch': {
+        name: 'Abdominal Crunch Machine',
+        muscles: 'Rectus Abdominis (Abs/Core)',
+        steps: [
+          'Select a light pin weight to start.',
+          'Sit back, place elbows on the padded armrests, and grip the upper handles.',
+          'Exhale and contract your abdominals to curl your upper body downward.',
+          'Inhale and slowly return back up without letting the weights slam.'
+        ],
+        tip: 'Perform the movement slowly. Focus on flexing your abs rather than yanking down with your arms.'
+      }
+    };
+
+    const sessionDefinitions = {
+      'day1': {
+        title: 'Full-Body Workout A',
+        badge: 'Day 1 - Strength',
+        type: 'strength',
+        exercises: ['leg_press', 'chest_press', 'lat_pulldown', 'shoulder_press', 'ab_crunch']
+      },
+      'day2': {
+        title: 'Run Session 1: Walk/Run Intervals',
+        badge: 'Day 2 - Cardio',
+        type: 'running',
+        subtype: 'intervals',
+        desc: '5 min Walk Warm-up ➔ 10 Rounds of (1 min Run / 1 min Walk) ➔ 5 min Walk Cool-down'
+      },
+      'day4': {
+        title: 'Full-Body Workout B',
+        badge: 'Day 4 - Strength',
+        type: 'strength',
+        exercises: ['leg_press', 'cable_row', 'chest_press', 'shoulder_press', 'ab_crunch']
+      },
+      'day5': {
+        title: 'Run Session 2: Steady Endurance',
+        badge: 'Day 5 - Cardio',
+        type: 'running',
+        subtype: 'steady',
+        desc: '20–25 minutes of continuous treadmill jog or brisk walk/jog at a smooth, conversational pace.'
+      }
+    };
+
+    // Application State
+    let currentSessionId = 'day1';
+    let currentWorkoutData = {};
+    let chartInstance = null;
+
+    // Load logs from localStorage
+    function getStoredLogs() {
+      const logs = localStorage.getItem('puregym_beginner_logs');
+      return logs ? JSON.parse(logs) : [];
+    }
+
+    function saveLogs(logs) {
+      localStorage.setItem('puregym_beginner_logs', JSON.stringify(logs));
+    }
+
+    // Switch Main Navigation View
+    function switchTab(tab) {
+      ['schedule', 'workout', 'history'].forEach(t => {
+        const viewEl = document.getElementById(`view-${t}`);
+        const tabBtn = document.getElementById(`tab-${t}`);
+        if (t === tab) {
+          viewEl.classList.remove('hidden');
+          tabBtn.classList.add('bg-brand-500', 'text-gray-950', 'shadow');
+          tabBtn.classList.remove('text-gray-400');
+        } else {
+          viewEl.classList.add('hidden');
+          tabBtn.classList.remove('bg-brand-500', 'text-gray-950', 'shadow');
+          tabBtn.classList.add('text-gray-400');
+        }
+      });
+
+      if (tab === 'history') {
+        renderHistory();
+      }
+    }
+
+    // Initialize or Start Session
+    function startSession(sessionId) {
+      currentSessionId = sessionId;
+      const config = sessionDefinitions[sessionId];
+      
+      document.getElementById('session-badge').innerText = config.badge;
+      document.getElementById('session-title').innerText = config.title;
+
+      const container = document.getElementById('workout-exercises-container');
+      container.innerHTML = '';
+
+      if (config.type === 'strength') {
+        currentWorkoutData = {
+          id: sessionId,
+          title: config.title,
+          type: 'strength',
+          date: new Date().toISOString(),
+          exercises: {}
+        };
+
+        config.exercises.forEach(exKey => {
+          const info = exerciseDetails[exKey];
+          currentWorkoutData.exercises[exKey] = [
+            { weight: 40, reps: 10, done: false },
+            { weight: 40, reps: 10, done: false },
+            { weight: 40, reps: 10, done: false }
+          ];
+
+          const exCard = document.createElement('div');
+          exCard.className = 'bg-gray-900 border border-gray-800 rounded-xl p-4 space-y-3';
+          exCard.innerHTML = `
+            <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+              <div>
+                <h3 class="font-semibold text-white text-base">${info.name}</h3>
+                <span class="text-xs text-gray-400">${info.muscles}</span>
+              </div>
+              <button onclick="openModal('${exKey}')" class="text-xs text-brand-400 hover:text-brand-300 flex items-center gap-1 bg-brand-500/10 px-2.5 py-1 rounded-lg border border-brand-500/20">
+                <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> Form Guide
+              </button>
+            </div>
+
+            <!-- Set Headers -->
+            <div class="grid grid-cols-4 gap-2 text-xs font-semibold text-gray-400 text-center">
+              <div>SET</div>
+              <div>LBS</div>
+              <div>REPS</div>
+              <div>DONE</div>
+            </div>
+
+            <!-- Sets Rows -->
+            <div class="space-y-2">
+              ${[0, 1, 2].map(idx => `
+                <div class="grid grid-cols-4 gap-2 items-center text-center">
+                  <span class="text-xs font-semibold text-gray-400 bg-gray-950 py-1.5 rounded-md border border-gray-800">Set ${idx + 1}</span>
+                  <input type="number" value="40" onchange="updateStrengthInput('${exKey}', ${idx}, 'weight', this.value)" 
+                    class="bg-gray-950 border border-gray-800 rounded-md py-1.5 text-center text-sm font-semibold text-brand-400 focus:outline-none focus:border-brand-500">
+                  <input type="number" value="10" onchange="updateStrengthInput('${exKey}', ${idx}, 'reps', this.value)" 
+                    class="bg-gray-950 border border-gray-800 rounded-md py-1.5 text-center text-sm font-semibold text-white focus:outline-none focus:border-brand-500">
+                  <button id="check-${exKey}-${idx}" onclick="toggleSetDone('${exKey}', ${idx})" 
+                    class="py-1.5 rounded-md border border-gray-800 bg-gray-950 text-gray-500 flex items-center justify-center hover:border-brand-500 transition">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          container.appendChild(exCard);
+        });
+      } else if (config.type === 'running') {
+        currentWorkoutData = {
+          id: sessionId,
+          title: config.title,
+          type: 'running',
+          date: new Date().toISOString(),
+          distance: 1.5,
+          timeMinutes: 25,
+          pace: '16:40',
+          notes: ''
+        };
+
+        const card = document.createElement('div');
+        card.className = 'bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-4';
+        card.innerHTML = `
+          <div class="bg-accent-500/10 p-3 rounded-xl border border-accent-500/20 text-xs text-accent-300">
+            <strong>Target Workout:</strong> ${config.desc}
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-gray-400 mb-1">Distance (Miles)</label>
+              <input type="number" step="0.1" value="1.5" id="run-dist" onchange="updateRunStats()" 
+                class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-sm font-semibold text-white focus:border-accent-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-400 mb-1">Total Time (Minutes)</label>
+              <input type="number" value="25" id="run-time" onchange="updateRunStats()" 
+                class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-sm font-semibold text-white focus:border-accent-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="bg-gray-950 p-3 rounded-lg border border-gray-800 flex justify-between items-center text-xs">
+            <span class="text-gray-400">Calculated Pace:</span>
+            <span id="calculated-pace" class="text-sm font-bold text-accent-400">16:40 min/mi</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1">Perceived Effort / Treadmill Notes</label>
+            <textarea id="run-notes" placeholder="e.g. Incline set to 1.0. Felt good on 5th interval!" onchange="updateRunNotes(this.value)" 
+              class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-xs text-white h-20 focus:border-accent-500 focus:outline-none"></textarea>
+          </div>
+        `;
+        container.appendChild(card);
+      }
+
+      lucide.createIcons();
+      switchTab('workout');
+    }
+
+    // Helper Functions for Tracking Input Changes
+    function updateStrengthInput(exKey, setIdx, field, val) {
+      currentWorkoutData.exercises[exKey][setIdx][field] = Number(val);
+    }
+
+    function toggleSetDone(exKey, setIdx) {
+      const isDone = !currentWorkoutData.exercises[exKey][setIdx].done;
+      currentWorkoutData.exercises[exKey][setIdx].done = isDone;
+
+      const btn = document.getElementById(`check-${exKey}-${setIdx}`);
+      if (isDone) {
+        btn.className = 'py-1.5 rounded-md border border-brand-500 bg-brand-500 text-gray-950 flex items-center justify-center transition';
+      } else {
+        btn.className = 'py-1.5 rounded-md border border-gray-800 bg-gray-950 text-gray-500 flex items-center justify-center hover:border-brand-500 transition';
+      }
+    }
+
+    function updateRunStats() {
+      const dist = parseFloat(document.getElementById('run-dist').value) || 0;
+      const mins = parseFloat(document.getElementById('run-time').value) || 0;
+      
+      currentWorkoutData.distance = dist;
+      currentWorkoutData.timeMinutes = mins;
+
+      if (dist > 0 && mins > 0) {
+        const decimalPace = mins / dist;
+        const pMins = Math.floor(decimalPace);
+        const pSecs = Math.round((decimalPace - pMins) * 60);
+        const formattedPace = `${pMins}:${pSecs < 10 ? '0' : ''}${pSecs}`;
+        currentWorkoutData.pace = formattedPace;
+        document.getElementById('calculated-pace').innerText = `${formattedPace} min/mi`;
+      }
+    }
+
+    function updateRunNotes(val) {
+      currentWorkoutData.notes = val;
+    }
+
+    // Finish & Save Session
+    function finishSession() {
+      const logs = getStoredLogs();
+      logs.unshift(currentWorkoutData);
+      saveLogs(logs);
+
+      switchTab('history');
+    }
+
+    // Render Progress & Saved History
+    function renderHistory() {
+      const logs = getStoredLogs();
+      const historyList = document.getElementById('history-list');
+      historyList.innerHTML = '';
+
+      if (logs.length === 0) {
+        historyList.innerHTML = `
+          <div class="text-center py-8 text-gray-500 text-xs">
+            No completed workouts saved yet. Complete a workout from the "Today's Session" tab to see history!
+          </div>
+        `;
+      } else {
+        logs.forEach((log) => {
+          const item = document.createElement('div');
+          item.className = 'bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs space-y-1.5';
+          const formattedDate = new Date(log.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+          if (log.type === 'strength') {
+            item.innerHTML = `
+              <div class="flex justify-between items-center text-gray-400 border-b border-gray-800/60 pb-1.5">
+                <span class="font-bold text-brand-400">${log.title}</span>
+                <span>${formattedDate}</span>
+              </div>
+              <div class="grid grid-cols-2 gap-1 text-gray-300 pt-1">
+                ${Object.keys(log.exercises).map(exKey => {
+                  const maxWeight = Math.max(...log.exercises[exKey].map(s => s.weight || 0));
+                  return `<div>• ${exerciseDetails[exKey]?.name || exKey}: <span class="text-white font-semibold">${maxWeight} lbs</span></div>`;
+                }).join('')}
+              </div>
+            `;
+          } else {
+            item.innerHTML = `
+              <div class="flex justify-between items-center text-gray-400 border-b border-gray-800/60 pb-1.5">
+                <span class="font-bold text-accent-400">${log.title}</span>
+                <span>${formattedDate}</span>
+              </div>
+              <div class="flex justify-between text-gray-300 pt-1">
+                <span>Distance: <strong class="text-white">${log.distance} mi</strong></span>
+                <span>Time: <strong class="text-white">${log.timeMinutes} mins</strong></span>
+                <span>Pace: <strong class="text-white">${log.pace} /mi</strong></span>
+              </div>
+            `;
+          }
+          historyList.appendChild(item);
+        });
+      }
+
+      // Render Chart
+      renderChart(logs);
+    }
+
+    function renderChart(logs) {
+      const ctx = document.getElementById('progressChart').getContext('2d');
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      const strengthLogs = logs.filter(l => l.type === 'strength' && l.exercises && l.exercises.leg_press).reverse();
+      const labels = strengthLogs.map(l => new Date(l.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }));
+      const legPressWeights = strengthLogs.map(l => Math.max(...l.exercises.leg_press.map(s => s.weight || 0)));
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.length ? labels : ['Day 1'],
+          datasets: [{
+            label: 'Leg Press Top Weight (lbs)',
+            data: legPressWeights.length ? legPressWeights : [50],
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: '#10b981'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#9ca3af', font: { size: 11 } }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#6b7280', font: { size: 10 } },
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            },
+            y: {
+              ticks: { color: '#6b7280', font: { size: 10 } },
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            }
+          }
+        }
+      });
+    }
+
+    // Modal Control
+    function openModal(exKey) {
+      const details = exerciseDetails[exKey];
+      if (!details) return;
+
+      document.getElementById('modal-title').innerText = details.name;
+      document.getElementById('modal-muscles').innerText = details.muscles;
+      document.getElementById('modal-tip').innerText = details.tip;
+
+      const stepsList = document.getElementById('modal-steps');
+      stepsList.innerHTML = '';
+      details.steps.forEach(step => {
+        const li = document.createElement('li');
+        li.innerText = step;
+        stepsList.appendChild(li);
+      });
+
+      document.getElementById('exercise-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('exercise-modal').classList.add('hidden');
+    }
+
+    // Reset Data Handler
+    document.getElementById('reset-data-btn').addEventListener('click', () => {
+      if (confirm("Are you sure you want to clear your saved workout logs?")) {
+        localStorage.removeItem('puregym_beginner_logs');
+        renderHistory();
+      }
+    });
+
+    // Initialize Page
+    window.onload = function() {
+      lucide.createIcons();
+      startSession('day1');
+    };
+  </script>
+</body>
+</html>
